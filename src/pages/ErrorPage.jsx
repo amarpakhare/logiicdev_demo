@@ -20,13 +20,13 @@ const ErrorPage = () => {
 						Go to Home
 					</Link>
 				</div>
-				<div className="mt-8">
+				{/* <div className="mt-8">
 					<img
 						src="https://via.placeholder.com/400x300.png?text=Not+Found"
 						alt="Not Found Illustration"
 						className="mx-auto w-64"
 					/>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)
