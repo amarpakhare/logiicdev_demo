@@ -1,0 +1,128 @@
+# HTTPS forced by SG-Optimizer
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# END HTTPS
+# SGS XMLRPC Disable Service
+<Files xmlrpc.php>
+	order deny,allow
+	deny from all
+</Files>
+# SGS XMLRPC Disable Service END
+
+
+# BEGIN WpFastestCache
+# Modified Time: 01-03-23 10:27:24
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTPS} =on
+RewriteCond %{HTTP_HOST} ^www.logiicdev.eu
+# Start WPFC Exclude
+# End WPFC Exclude
+# Start_WPFC_Exclude_Admin_Cookie
+RewriteCond %{HTTP:Cookie} !wordpress_logged_in_[^\=]+\=AmarPakhare|RITE|wordpressadmin
+# End_WPFC_Exclude_Admin_Cookie
+RewriteCond %{HTTP_HOST} ^www.logiicdev.eu
+RewriteCond %{HTTP_USER_AGENT} !(facebookexternalhit|WP_FASTEST_CACHE_CSS_VALIDATOR|Twitterbot|LinkedInBot|WhatsApp|Mediatoolkitbot)
+RewriteCond %{HTTP_USER_AGENT} !(WP\sFastest\sCache\sPreload(\siPhone\sMobile)?\s*Bot)
+RewriteCond %{REQUEST_METHOD} !POST
+RewriteCond %{REQUEST_URI} !(\/){2}$
+RewriteCond %{REQUEST_URI} \/$
+RewriteCond %{QUERY_STRING} !.+
+RewriteCond %{HTTP:Cookie} !comment_author_
+RewriteCond %{HTTP:Cookie} !safirmobilswitcher=mobil
+RewriteCond %{HTTP:Profile} !^[a-z0-9\"]+ [NC]
+RewriteCond %{DOCUMENT_ROOT}/wp-content/cache/all/$1/index.html -f [or]
+RewriteCond /home/.sites/94/site7723198/web/wp-content/cache/all/$1/index.html -f
+RewriteRule ^(.*) "/wp-content/cache/all/$1/index.html" [L]
+</IfModule>
+<FilesMatch "index\.(html|htm)$">
+AddDefaultCharset UTF-8
+<ifModule mod_headers.c>
+FileETag None
+Header unset ETag
+Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+Header set Pragma "no-cache"
+Header set Expires "Mon, 29 Oct 1923 20:30:00 GMT"
+</ifModule>
+</FilesMatch>
+# END WpFastestCache
+
+# BEGIN LBCWpFastestCache
+<FilesMatch "\.(webm|ogg|mp4|ico|pdf|flv|avif|jpg|jpeg|png|gif|webp|js|css|swf|x-html|css|xml|js|woff|woff2|otf|ttf|svg|eot)(\.gz)?$">
+
+<IfModule mod_headers.c>
+Header set Expires "max-age=A10368000, public"
+Header unset ETag
+Header set Connection keep-alive
+FileETag None
+</IfModule>
+</FilesMatch>
+# END LBCWpFastestCache
+
+
+# http zu https weiterleiten
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Browser Caching
+
+
+# Alternatives Caching
+<IfModule mod_headers.c>
+  Header append Cache-Control "public"
+  Header append Vary Accept-Encoding
+  Header set Connection keep-alive
+  Header unset ETag
+  FileETag None
+</IfModule>
+
+# gzip Komprimierung
+
+
+# Kein Zugriff auf install.php
+<files install.php>
+  Order allow,deny
+  Deny from all
+</files>
+
+# Kein Zugriff auf wp-config.php 
+<files wp-config.php>
+  Order allow,deny
+  Deny from all
+</files>
+
+# Kein Zugriff auf .htaccess und .htpasswd
+<FilesMatch "(\.htaccess|\.htpasswd)">
+  Order deny,allow
+  Deny from all
+</FilesMatch>
+
+# BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+# SGO Unset Vary
+  Header unset Vary
+# SGO Unset Vary END
